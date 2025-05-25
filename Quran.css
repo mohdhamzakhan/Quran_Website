@@ -1,0 +1,361 @@
+@font-face {
+  font-family: 'Noto Naskh Arabic';
+  src: url('fonts/NotoNaskhArabic-Regular.ttf')  format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-icon {
+  font-size: 2rem;
+}
+
+.logo h1 {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+}
+
+.quran-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  min-height: 500px;
+}
+
+.surah-list {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.surah-item {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.surah-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.surah-item.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ayah-list {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.ayah {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ayah:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.ayah-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.ayah-number {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.ayah-text {
+  font-family: 'Noto Naskh Arabic', "Traditional Arabic", "Amiri", serif;
+  color: white;
+  font-size: 1.8rem;
+  line-height: 2.5;
+  direction: rtl;
+  text-align: right;
+}
+
+input[type="range"] {
+  width: 200px;
+  margin-left: 10px;
+}
+
+.ayah-word {
+  display: inline-block;
+  position: relative;
+  margin: 0 0.2rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ayah-word:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.accuracy {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ayah-word.scored .accuracy {
+  opacity: 1;
+}
+
+.accuracy.red {
+  background: #ff4757;
+  color: white;
+}
+
+.accuracy.yellow {
+  background: #ffa502;
+  color: white;
+}
+
+.accuracy.green {
+  background: #2ed573;
+  color: white;
+}
+
+.recording {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .quran-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ayah-text {
+    font-size: 1.4rem;
+    line-height: 2;
+  }
+}
+
+.control-btn.recording-active {
+  background-color: #2ed573; /* theme-matching green */
+  color: white;
+  font-weight: bold;
+  animation: pulse 1s infinite;
+  pointer-events: none; /* disable further clicking */
+}
+
+.ayah-english {
+  color: white;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: left;
+  direction: ltr;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Add to Quran.css */
+.tajweed-hamzat_wasl {
+  color: #ff9ff3;
+  position: relative;
+}
+.tajweed-lam_shamsiyyah {
+  color: #feca57;
+}
+.tajweed-madd_2 {
+  color: #1dd1a1;
+}
+.tajweed-madd_246 {
+  color: #2e86de;
+}
+.tajweed-madd_6 {
+  color: #5f27cd;
+}
+
+.tajweed-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 100;
+  display: none;
+}
+
+.rule-hamzat_wasl {
+  color: red;
+  font-weight: bold;
+}
+.rule-lam_shamsiyyah {
+  color: green;
+  font-weight: bold;
+}
+.rule-madd_2 {
+  color: blue;
+}
+.rule-madd_246 {
+  color: purple;
+}
+.rule-madd_6 {
+  color: orange;
+}
+
+/* Add more rules as needed */

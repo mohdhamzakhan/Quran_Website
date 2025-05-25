@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Universal Pronunciation Coach</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  </head>
+  <body>
+    <div class="bg-animation">
+      <div class="floating-orb orb-1"></div>
+      <div class="floating-orb orb-2"></div>
+      <div class="floating-orb orb-3"></div>
+    </div>
+
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">🎯</div>
+          <h1>LinguaCoach AI</h1>
+        </div>
+        <nav class="language-nav">
+          <button class="lang-btn active" data-lang="arabic">العربية</button>
+          <button class="lang-btn" data-lang="urdu">اردو</button>
+          <button class="lang-btn" data-lang="french">Français</button>
+          <button class="lang-btn" data-lang="spanish">Español</button>
+          <button class="lang-btn" data-lang="hindi">हिन्दी</button>
+          <button class="lang-btn" data-lang="Quran"><a href="Quran.html">Quran(ٱلْقُرْآن)</a></button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Arabic Page -->
+      <div class="language-page active" id="arabic-page">
+        <div class="page-header">
+          <h2 class="page-title">Arabic Letters</h2>
+          <p class="page-subtitle">
+            Master the pronunciation of Arabic letters with AI-powered feedback
+          </p>
+        </div>
+        <div class="letter-grid" id="arabic-grid"></div>
+      </div>
+
+      <!-- Urdu Page -->
+      <div class="language-page" id="urdu-page">
+        <div class="page-header">
+          <h2 class="page-title">Urdu Letters</h2>
+          <p class="page-subtitle">
+            Perfect your Urdu pronunciation with intelligent guidance
+          </p>
+        </div>
+        <div class="letter-grid" id="urdu-grid"></div>
+      </div>
+
+      <!-- French Page -->
+      <div class="language-page" id="french-page">
+        <div class="page-header">
+          <h2 class="page-title">French Letters</h2>
+          <p class="page-subtitle">
+            Learn French pronunciation with advanced speech recognition
+          </p>
+        </div>
+        <div class="letter-grid" id="french-grid"></div>
+      </div>
+
+      <!-- Spanish Page -->
+      <div class="language-page" id="spanish-page">
+        <div class="page-header">
+          <h2 class="page-title">Spanish Letters</h2>
+          <p class="page-subtitle">
+            Master Spanish sounds with personalized feedback
+          </p>
+        </div>
+        <div class="letter-grid" id="spanish-grid"></div>
+      </div>
+
+      <!-- Hindi Page -->
+      <div class="language-page" id="hindi-page">
+        <div class="page-header">
+          <h2 class="page-title">Hindi Letters</h2>
+          <p class="page-subtitle">Devanagari script pronunciation made easy</p>
+        </div>
+        <div class="letter-grid" id="hindi-grid"></div>
+      </div>
+
+     
+      
+
+      <!-- Practice Section -->
+      <div class="practice-section" id="practice-section">
+        <div class="selected-letter" id="selected-char">Select a letter</div>
+        <div class="selected-info">
+          <h3 id="selected-name">Choose a letter to practice</h3>
+          <p id="selected-description">
+            Click on any letter above to start practicing
+          </p>
+        </div>
+
+        <div class="pronunciation-guide hidden" id="pronunciation-guide">
+          <div class="guide-content">
+            <div class="guide-item">
+              <div class="guide-label">IPA Symbol</div>
+              <div class="guide-value ipa" id="ipa-symbol">-</div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-label">Example Word</div>
+              <div class="guide-value" id="example-word">-</div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-label">Target Sound</div>
+              <div class="guide-value" id="target-sound">-</div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-label">Difficulty</div>
+              <div class="guide-value" id="difficulty-level">-</div>
+            </div>
+          </div>
+          <div style="margin-top: 1.5rem">
+            <div class="guide-label">Pronunciation Guide</div>
+            <div class="guide-value" id="pronunciation-instructions">-</div>
+          </div>
+        </div>
+
+        <div class="recording-controls">
+          <button class="record-btn primary" id="record-btn">
+            🎤 Start Recording
+          </button>
+          <button class="record-btn secondary" id="play-example-btn">
+            🔊 Play Example
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback Section -->
+      <div class="feedback-section hidden" id="feedback-section">
+        <div class="feedback-header">
+          <h3>Pronunciation Analysis</h3>
+          <div class="accuracy-display">
+            <div class="accuracy-score" id="accuracy-score">0%</div>
+            <div class="accuracy-label">Accuracy</div>
+          </div>
+        </div>
+
+        <div class="feedback-details" id="feedback-details">
+          <!-- Feedback cards will be generated here -->
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

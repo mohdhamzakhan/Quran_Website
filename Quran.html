@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quran Recitation</title>
+    <link rel="stylesheet" href="Quran.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">📖</div>
+          <h1>Quran Recitation</h1>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="language-page active" id="Quran-page">
+        <div class="page-header">
+          <h2 class="page-title">Quran Recitation</h2>
+          <p class="page-subtitle">Listen, recite, and learn verse by verse</p>
+        </div>
+        <div style="text-align: center; margin-bottom: 1rem; color: white;">
+          <label for="fontSlider">Font Size:</label>
+          <input type="range" id="fontSlider" min="16" max="48" value="28" onchange="setFontSize(this.value)">
+        </div>          
+        <div class="quran-container">
+          <div class="surah-list" id="surah-list">
+            <div class="loading">Loading Surahs...</div>
+          </div>
+          <div class="ayah-list" id="ayah-list">
+            <div class="loading">Select a Surah to view verses</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="quranScript.js" defer></script>
+  </body>
+</html>
