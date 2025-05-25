@@ -113,81 +113,118 @@ function renderAyahs(surahName, ayahs) {
   });
 }
 
+let currentAudio = null;
+let currentPlayBtn = null;
 
 function playQuranAudio(surah, ayah, playBtn) {
   const paddedSurah = String(surah).padStart(3, '0');
   const paddedAyah = String(ayah).padStart(3, '0');
   const audioUrl = `https://verses.quran.com/AbdulBaset/Mujawwad/mp3/${paddedSurah}${paddedAyah}.mp3`;
-  
-  const audio = new Audio(audioUrl);
 
-  // Find the ayah div and word spans
-  // Assumes the current ayah is rendered and has an id like 'ayah-<index>'
-  // We'll look for the ayah with the current surah/ayah number in the DOM
-  // If you have an index, pass it for more accuracy
-  const ayahDiv = Array.from(document.querySelectorAll('.ayah'))
-    .find(div => {
-      const numSpan = div.querySelector('.ayah-number');
-      return numSpan && numSpan.textContent == ayah;
-    });
+  const ayahDiv = Array.from(document.querySelectorAll('.ayah')).find(div => {
+    const numSpan = div.querySelector('.ayah-number');
+    return numSpan && parseInt(numSpan.textContent) === ayah;
+  });
   const wordSpans = ayahDiv ? ayahDiv.querySelectorAll('.ayah-word') : [];
 
-  let highlightInterval = null;
+  const isSameAudio =
+    currentAudio &&
+    currentAudio.src === audioUrl &&
+    currentPlayBtn === playBtn;
 
-  // Button UI
-  if (playBtn) {
-    playBtn.disabled = true;
-    playBtn.textContent = "⏳ Playing...";
+  if (isSameAudio) {
+    // Toggle play/pause
+    if (!currentAudio.paused) {
+      currentAudio.pause();
+      playBtn.textContent = "▶️ Resume";
+    } else {
+      currentAudio.play();
+      playBtn.textContent = "⏸️ Pause";
+    }
+    return;
   }
+
+  // If it's a different ayah: stop current, reset button text
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    if (currentPlayBtn) {
+      currentPlayBtn.textContent = "🔊 Play";
+      currentPlayBtn.disabled = false;
+    }
+    currentAudio = null;
+    currentPlayBtn = null;
+  }
+
+  // New audio setup
+  const audio = new Audio(audioUrl);
+  currentAudio = audio;
+  currentPlayBtn = playBtn;
+
+  let highlightInterval = null;
 
   function resetHighlights() {
     wordSpans.forEach(span => span.style.backgroundColor = '');
   }
 
-  audio.addEventListener('play', () => {
-    if (wordSpans.length > 0) {
-      highlightInterval = setInterval(() => {
-        if (!audio.duration || audio.duration === Infinity) return;
-        const position = audio.currentTime / audio.duration;
-        const current = Math.min(
-          wordSpans.length - 1,
-          Math.floor(position * wordSpans.length)
-        );
-        wordSpans.forEach((span, i) => {
-          span.style.backgroundColor = (i === current) ? "#c8f7c5" : "";
-        });
-      }, 80);
-    }
+  // Disable all other play buttons
+  document.querySelectorAll(".play-btn").forEach(btn => {
+    btn.disabled = (btn !== playBtn);
   });
 
-  audio.addEventListener('ended', () => {
-    if (highlightInterval) clearInterval(highlightInterval);
-    resetHighlights();
-    if (playBtn) {
-      playBtn.disabled = false;
-      playBtn.textContent = "🔊 Play";
-    }
+  playBtn.disabled = false;
+  playBtn.textContent = "⏸️ Pause";
+
+  audio.addEventListener('play', () => {
+    highlightInterval = setInterval(() => {
+      if (!audio.duration || audio.duration === Infinity) return;
+      const position = audio.currentTime / audio.duration;
+      const totalLength = Array.from(wordSpans).reduce((sum, span) => sum + span.innerText.length, 0);
+      let elapsed = audio.currentTime / audio.duration * totalLength;
+
+      let current = 0;
+      let acc = 0;
+      for (let i = 0; i < wordSpans.length; i++) {
+        acc += wordSpans[i].innerText.length;
+        if (elapsed <= acc) {
+          current = i;
+          break;
+        }
+      }
+
+      wordSpans.forEach((span, i) => {
+        span.style.backgroundColor = i === current ? "#c8f7c5" : "";
+      });
+    }, 80);
   });
 
   audio.addEventListener('pause', () => {
-    if (highlightInterval) clearInterval(highlightInterval);
+    clearInterval(highlightInterval);
     resetHighlights();
-    if (playBtn) {
-      playBtn.disabled = false;
-      playBtn.textContent = "🔊 Play";
-    }
+    playBtn.textContent = "▶️ Resume";
   });
 
-  audio.play().catch(e => {
-    console.log("Audio playback failed:", e);
-    if (highlightInterval) clearInterval(highlightInterval);
+  audio.addEventListener('ended', () => {
+    clearInterval(highlightInterval);
     resetHighlights();
-    if (playBtn) {
-      playBtn.disabled = false;
-      playBtn.textContent = "🔊 Play";
-    }
+    playBtn.textContent = "🔊 Play";
+    document.querySelectorAll(".play-btn").forEach(btn => (btn.disabled = false));
+    currentAudio = null;
+    currentPlayBtn = null;
+  });
+
+  audio.play().catch((e) => {
+    console.error("Audio playback failed:", e);
+    clearInterval(highlightInterval);
+    resetHighlights();
+    playBtn.textContent = "🔊 Play";
+    document.querySelectorAll(".play-btn").forEach(btn => (btn.disabled = false));
+    currentAudio = null;
+    currentPlayBtn = null;
   });
 }
+
+
 
 function normalizeArabic(text) {
   return text
