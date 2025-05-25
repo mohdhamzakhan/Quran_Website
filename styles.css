@@ -629,3 +629,26 @@ body {
 .hidden {
   display: none !important;
 }
+
+.footer {
+  background-color: #101426;
+  color: #e0e0e0;
+  padding: 30px 15px;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 60px;
+  border-top: 1px solid #2c3e50;
+}
+
+.footer-content p {
+  margin: 8px 0;
+}
+
+.footer a {
+  color: #4fc3f7;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

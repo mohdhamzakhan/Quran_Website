@@ -90,11 +90,11 @@ function renderAyahs(surahName, ayahs) {
     div.setAttribute("id", `ayah-${index}`);
 
     const words = ayah.words.map((word, i) => `
-      <span class="ayah-word" id="ayah-${index}-word-${i}" data-word="${word}">
-        ${word}
-        <div class="accuracy" id="acc-${index}-${i}"></div>
-      </span>
-    `).join(" ");
+  <span class="ayah-word" id="ayah-${index}-word-${i}" data-word="${word}">
+    ${word}
+    <div class="accuracy" id="acc-${index}-${i}"></div>
+  </span>
+`).join(" ");
 
     div.innerHTML = `
       <div class="ayah-controls">
@@ -106,11 +106,13 @@ function renderAyahs(surahName, ayahs) {
         <div class="ayah-text">${words}</div>
         <div class="ayah-english">${ayah.ayahEnglish}</div>
       </div>
+      <div class="recited-text" id="recited-text-${index}" style="margin-top:8px;color:#555;font-style:italic;"></div>
     `;
 
     container.appendChild(div);
   });
 }
+
 
 function playQuranAudio(surah, ayah, playBtn) {
   const paddedSurah = String(surah).padStart(3, '0');
@@ -119,25 +121,72 @@ function playQuranAudio(surah, ayah, playBtn) {
   
   const audio = new Audio(audioUrl);
 
+  // Find the ayah div and word spans
+  // Assumes the current ayah is rendered and has an id like 'ayah-<index>'
+  // We'll look for the ayah with the current surah/ayah number in the DOM
+  // If you have an index, pass it for more accuracy
+  const ayahDiv = Array.from(document.querySelectorAll('.ayah'))
+    .find(div => {
+      const numSpan = div.querySelector('.ayah-number');
+      return numSpan && numSpan.textContent == ayah;
+    });
+  const wordSpans = ayahDiv ? ayahDiv.querySelectorAll('.ayah-word') : [];
+
+  let highlightInterval = null;
+
+  // Button UI
   if (playBtn) {
     playBtn.disabled = true;
     playBtn.textContent = "⏳ Playing...";
   }
 
-  audio.play().catch(e => {
-    console.log("Audio playback failed:", e);
+  function resetHighlights() {
+    wordSpans.forEach(span => span.style.backgroundColor = '');
+  }
+
+  audio.addEventListener('play', () => {
+    if (wordSpans.length > 0) {
+      highlightInterval = setInterval(() => {
+        if (!audio.duration || audio.duration === Infinity) return;
+        const position = audio.currentTime / audio.duration;
+        const current = Math.min(
+          wordSpans.length - 1,
+          Math.floor(position * wordSpans.length)
+        );
+        wordSpans.forEach((span, i) => {
+          span.style.backgroundColor = (i === current) ? "#c8f7c5" : "";
+        });
+      }, 80);
+    }
+  });
+
+  audio.addEventListener('ended', () => {
+    if (highlightInterval) clearInterval(highlightInterval);
+    resetHighlights();
     if (playBtn) {
       playBtn.disabled = false;
       playBtn.textContent = "🔊 Play";
     }
   });
 
-  audio.onended = () => {
+  audio.addEventListener('pause', () => {
+    if (highlightInterval) clearInterval(highlightInterval);
+    resetHighlights();
     if (playBtn) {
       playBtn.disabled = false;
       playBtn.textContent = "🔊 Play";
     }
-  };
+  });
+
+  audio.play().catch(e => {
+    console.log("Audio playback failed:", e);
+    if (highlightInterval) clearInterval(highlightInterval);
+    resetHighlights();
+    if (playBtn) {
+      playBtn.disabled = false;
+      playBtn.textContent = "🔊 Play";
+    }
+  });
 }
 
 function normalizeArabic(text) {
